@@ -34,7 +34,17 @@ class JapaneseWebServer(SimpleHTTPRequestHandler):
                   'wo', 'ro', 'mo', 'ho', 'to', 'no', 'so', 'ko', 'yo', 'o']
         import random
         random.shuffle(s)
-        r.append(str(s))
+        a = 0
+        r.append('<table>')
+        for syll in s:
+            if a == 0:
+                r.append('<tr>')
+            r.append('<td>%s</td>' % (syll,))
+                
+            a = (a+1) % 12
+            if a == 0:
+                r.append('</tr>')
+        r.append('</table>')
         
     def build_head(self, r):
         title = 'Overview' 
