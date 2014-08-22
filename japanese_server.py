@@ -6,6 +6,7 @@ Created on 04.08.2014
 
 from http.server import SimpleHTTPRequestHandler
 from urllib import parse
+import random
 
 class JapaneseWebServer(SimpleHTTPRequestHandler):
     
@@ -20,11 +21,26 @@ class JapaneseWebServer(SimpleHTTPRequestHandler):
         query = parse.parse_qs(request.query)
         if path.startswith('/syllables'):
             self.view_syllables(r, query)
+        if path.startswith('/letters'):
+            self.view_letters(r, query)
         self.build_body(r)
         
         encoded = '\n'.join(r).encode(self.enc)
         self.send_headers(encoded)
         self.wfile.write(encoded)
+        
+    def view_table(self, table, r):
+        a = 0
+        r.append('<table>')
+        for t in table:
+            if a == 0:
+                r.append('<tr>')
+            r.append('<td>%s</td>' % (t,))
+                
+            a = (a+1) % 12
+            if a == 0:
+                r.append('</tr>')
+        r.append('</table>')
         
     def view_syllables(self, r, q):
         s = ['n', 'wa', 'ra', 'ma', 'ha', 'ta', 'na', 'sa', 'ka', 'ya', 'a',
@@ -32,19 +48,18 @@ class JapaneseWebServer(SimpleHTTPRequestHandler):
                         'ru', 'mu', 'fu', 'tsu','nu', 'su', 'ku', 'yu', 'u',
                   'we', 're', 'me', 'he', 'te', 'ne', 'se', 'ke',       'e',
                   'wo', 'ro', 'mo', 'ho', 'to', 'no', 'so', 'ko', 'yo', 'o']
-        import random
         random.shuffle(s)
-        a = 0
-        r.append('<table>')
-        for syll in s:
-            if a == 0:
-                r.append('<tr>')
-            r.append('<td>%s</td>' % (syll,))
-                
-            a = (a+1) % 12
-            if a == 0:
-                r.append('</tr>')
-        r.append('</table>')
+        self.view_table(s, r)
+        
+    def view_letters(self, r, q):
+        a = list("アイウエオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヰヱヲン")
+        b = list("あいうえおかがきぎくぐけげこごさざしじすずせぜそぞただちぢつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもやゆよらりるれろわゐゑをん")
+
+        random.shuffle(a)
+        random.shuffle(b)
+        self.view_table(a, r)
+        r.append('<p/>')
+        self.view_table(b, r)
         
     def build_head(self, r):
         title = 'Overview' 
