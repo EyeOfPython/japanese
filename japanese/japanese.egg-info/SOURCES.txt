@@ -1,0 +1,10 @@
+setup.py
+japanese/__init__.py
+japanese/views.py
+japanese.egg-info/PKG-INFO
+japanese.egg-info/SOURCES.txt
+japanese.egg-info/dependency_links.txt
+japanese.egg-info/entry_points.txt
+japanese.egg-info/not-zip-safe
+japanese.egg-info/requires.txt
+japanese.egg-info/top_level.txt
