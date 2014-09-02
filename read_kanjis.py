@@ -39,13 +39,13 @@ def read_kanji(kanji,  reg=reg):
     
 mongo_server = pymongo.MongoClient('ultimus.sytes.net', 27017)
 n = 1
-for k in mongo_server.kanjis.kanjis.find({'freq': {'$gt':0}}, sort=[('freq',1)]):
+for k in [] and mongo_server.kanjis.kanjis.find({'freq': {'$gt':0}}, sort=[('freq',1)]):
     if k['freq'] != n:
         break
     n += 1
     print(k)
     
-if __name__ == '__main__1':
+if __name__ == '__main__':
     sys.stdout = open(1, 'w', encoding='utf-8', closefd=False)
     
     kanjis = open('kanjidict.csv', encoding='utf-8')
@@ -58,6 +58,8 @@ if __name__ == '__main__1':
     db_kanjis = db.kanjis
     for l in kanjis:
         kanji = l[0]
+        if db_kanjis.find_one({'kanji': kanji}):
+            continue
         kanji_info = read_kanji(kanji)
         db_kanjis.remove({'kanji': kanji})
         s = db_kanjis.save(kanji_info)
